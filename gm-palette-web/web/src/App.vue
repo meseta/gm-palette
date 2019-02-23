@@ -179,7 +179,7 @@ export default {
       return this.palette.length > 0
     },
     paletteSize () {
-      return this.palette.length
+      return this.palette.length - 5
     }
   },
   methods: {
