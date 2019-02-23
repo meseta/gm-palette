@@ -60,7 +60,7 @@
                   </p>
                   <v-list dense>
                     <template v-for="(colorData, index) in palette">
-                      <v-list-tile :key="index" avatar dense>
+                      <v-list-tile :key="index" avatar>
                         <v-list-tile-avatar :color="'#' + colorData['color']">
                         </v-list-tile-avatar>
 
@@ -85,7 +85,7 @@
                   <span class="title font-weight-light">Generated Macros</span>
                 </v-card-title>
                 <v-card-text>
-                  <v-textarea style="font-family: 'Roboto Mono', monospace;" label="Macros" v-model="generated" auto-grow readonly></v-textarea>
+                  <v-textarea style="font-family: 'Roboto Mono', monospace;" label="Macros" v-model="generated" auto-grow></v-textarea>
                 </v-card-text>
                 <v-card-actions>
                   <v-btn flat @click="back()">Back</v-btn>
