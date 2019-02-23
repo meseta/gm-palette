@@ -75,7 +75,7 @@
               <v-card>
                 <v-card-text>
                   <p>
-                    <v-text-field name="prefix" label="Macro prefix" v-model="prefix" placeholder="PALETTE_"></v-text-field>
+                    <v-text-field solo prepend-icon="ballot" name="prefix" label="Macro prefix" v-model="prefix"></v-text-field>
                   </p>
                   <v-list dense>
                     <template v-for="(colorData, index) in palette">
@@ -167,7 +167,7 @@ export default {
       paletteText: '000000\r\n222034\r\n45283c\r\n663931\r\n8f563b\r\ndf7126\r\nd9a066\r\neec39a\r\nfbf236\r\n99e550\r\n6abe30\r\n37946e\r\n4b692f\r\n524b24\r\n323c39\r\n3f3f74\r\n306082\r\n5b6ee1\r\n639bff\r\n5fcde4\r\ncbdbfc\r\nffffff\r\n9badb7\r\n847e87\r\n696a6a\r\n595652\r\n76428a\r\nac3232\r\nd95763\r\nd77bba\r\n8f974a\r\n8a6f30\r\n',
 
       palette: [],
-      prefix: 'PALETTE_',
+      prefix: 'PAL_',
       generated: ''
     }
   },
