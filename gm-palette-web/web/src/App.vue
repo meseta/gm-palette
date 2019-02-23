@@ -104,7 +104,7 @@
                   <span class="title font-weight-light">Generated Macros</span>
                 </v-card-title>
                 <v-card-text>
-                  <v-textarea style="font-family: 'Roboto Mono', monospace;" label="Macros" v-model="generated" auto-grow></v-textarea>
+                  <v-textarea style="font-family: 'Roboto Mono', monospace;" :rows="paletteSize" label="Macros" v-model="generated" auto-grow></v-textarea>
                 </v-card-text>
                 <v-card-actions>
                   <v-btn flat @click="back()">Back</v-btn>
@@ -177,6 +177,9 @@ export default {
     },
     hasPalette () {
       return this.palette.length > 0
+    },
+    paletteSize () {
+      return this.palette.length
     }
   },
   methods: {
@@ -222,9 +225,7 @@ export default {
             let color = convert.rgb.hex(rgb)
             let hsv = convert.rgb.hsv(rgb)
 
-            let closestName
-            let closestDist
-            [closestDist, closestName] = this.findClosest(hsv)
+            let closestName = this.findClosest(hsv)
 
             closestName = closestName.toUpperCase().replace(/_/g, '')
 
@@ -234,8 +235,6 @@ export default {
             } else {
               usedNames[closestName] = 1
             }
-
-            console.log(closestName + ' - ' + closestDist)
 
             this.palette.push({
               name: closestName,
@@ -252,6 +251,7 @@ export default {
           this.stage += 1
         })
         .catch((err) => {
+          this.loadingPalette = false
           this.setError(err)
           console.log(err)
         })
@@ -272,7 +272,7 @@ export default {
         }
       }
 
-      return [closestDist, closestName]
+      return closestName
     },
     generate () {
       let maxFraglength = 0
@@ -292,7 +292,7 @@ export default {
         text += ' '.repeat(4 + maxFraglength - this.palette[i].fragment.length)
         let color = this.palette[i].color
 
-        text += '$' + color.substr(4, 5) + color.substr(2, 3) + color.substr(0, 1)
+        text += '$' + color.substr(4, 2) + color.substr(2, 2) + color.substr(0, 2)
         text += '\r\n'
       }
 
