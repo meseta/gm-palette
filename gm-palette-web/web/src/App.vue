@@ -1,5 +1,5 @@
 <template>
-  <v-app>
+  <v-app :dark="darkMode">
     <v-toolbar flat app class="primary">
       <v-toolbar-title
         class="text-uppercase white--text font-weight-light"
@@ -7,6 +7,25 @@
         v-on:click=";">
         GMPalette
       </v-toolbar-title>
+
+      <v-tooltip bottom>
+        <template #activator="data">
+          <v-btn fab small flat v-on="data.on" v-on:click="aboutDialog=true" >
+            <v-icon class="white--text">info</v-icon>
+          </v-btn>
+        </template>
+        <span>About</span>
+      </v-tooltip>
+
+      <v-tooltip bottom>
+        <template #activator="data">
+          <v-btn fab small flat v-on="data.on" v-on:click="toggleDark()" >
+            <v-icon v-if="darkMode" class="white--text">brightness_3</v-icon>
+            <v-icon v-else class="white--text">brightness_5</v-icon>
+          </v-btn>
+        </template>
+        <span>Toggle dark mode</span>
+      </v-tooltip>
 
       <v-spacer></v-spacer>
 
@@ -98,6 +117,31 @@
         </v-stepper>
       </v-container>
     </v-content>
+
+    <v-dialog v-model="aboutDialog" max-width="500">
+      <v-card>
+        <v-card-title class="headline">GMPalette</v-card-title>
+        <v-card-text>
+          <p>
+            GMPalette is a tool for generating color macros<br />
+            Author: <a href="http://meseta.io">Meseta</a>
+          </p>
+          <p>
+            Paste in hex codes such as those downloaded from Lospec.com
+            (use <b>Paint.net TXT</b> or <b>HEX File</b> formats);
+            adjust macro prefix and color names; then generate macros to paste into your code
+          </p>
+          <p>
+            Color names are automatically selected using closeness to colors
+            from <a href="https://en.wikipedia.org/wiki/Lists_of_colors">Wikipedia</a>
+          </p>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="primary" flat @click="aboutDialog=false">Cool, OK</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-app>
 </template>
 
@@ -110,6 +154,9 @@ export default {
   name: 'App',
   data () {
     return {
+      aboutDialog: false,
+      darkMode: false,
+
       error: '',
       success: '',
       errorFlag: false,
@@ -133,6 +180,9 @@ export default {
     }
   },
   methods: {
+    toggleDark () {
+      this.darkMode = !this.darkMode
+    },
     back () {
       if (this.stage > 1) {
         this.stage -= 1
