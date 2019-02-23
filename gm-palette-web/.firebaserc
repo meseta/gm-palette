@@ -1,0 +1,14 @@
+{
+  "projects": {
+    "gmpalette": "gmpalette-meseta"
+  },
+  "targets": {
+    "gmtools-meseta": {
+      "hosting": {
+        "gmpalette": [
+          "gmpalette-meseta"
+        ]
+      }
+    }
+  }
+}
