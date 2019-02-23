@@ -1,6 +1,7 @@
 # GMPalette
 
 > Lospec palette to macro tool
+Colors are from https://github.com/codebrainz/color-names
 
 ## Build Setup
 

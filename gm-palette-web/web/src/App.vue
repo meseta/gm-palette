@@ -60,7 +60,7 @@
                   </p>
                   <v-list dense>
                     <template v-for="(colorData, index) in palette">
-                      <v-list-tile :key="index" avatar>
+                      <v-list-tile :key="index" avatar dense>
                         <v-list-tile-avatar :color="'#' + colorData['color']">
                         </v-list-tile-avatar>
 
@@ -103,7 +103,8 @@
 
 <script>
 
-//import json from 'colors.json'
+import colorList from '@/assets/colors.json'
+import convert from 'color-convert'
 
 export default {
   name: 'App',
@@ -153,25 +154,45 @@ export default {
       return new Promise((resolve, reject) => {
         let lines = this.paletteText.match(/[^\r\n]+/g)
         this.palette = []
-        let count = 1
+        let usedNames = {}
 
         for (let i = 0; i < lines.length; i++) {
-          let line = lines[i]
+          let line = lines[i].replace('#', '')
           if (!line.startsWith(';')) {
-            let color
+            let hex
             if (line.length === 8) {
-              color = line.substr(2, 7)
-            } else if (line.length === 6) {
-              color = line
+              hex = line.substr(2, 7)
+            } else if (line.length === 6 || line.length === 3) {
+              hex = line
             } else {
               reject(new Error('Error parsing line ' + (i + 1)))
             }
 
+            let rgb = convert.hex.rgb(hex)
+            let color = convert.rgb.hex(rgb)
+            let hsv = convert.rgb.hsv(rgb)
+
+            let closestName
+            let closestDist
+            [closestDist, closestName] = this.findClosest(hsv)
+
+            closestName = closestName.toUpperCase().replace(/_/g, '')
+
+            if (closestName in usedNames) {
+              let count = ++usedNames[closestName]
+              closestName += count
+            } else {
+              usedNames[closestName] = 1
+            }
+
+            console.log(closestName + ' - ' + closestDist)
+
             this.palette.push({
-              name: 'COL' + (count),
-              color: color
+              name: closestName,
+              rgb: rgb,
+              color: color,
+              hsv: hsv
             })
-            count += 1
           }
         }
         resolve()
@@ -184,6 +205,24 @@ export default {
           this.setError(err)
           console.log(err)
         })
+    },
+    findClosest (color1) {
+      let closestName = null
+      let closestDist = null
+
+      for (let colorName in colorList) {
+        let color2 = colorList[colorName]
+        let hh = color1[0] - color2.hsv[0]
+        let ss = color1[1] - color2.hsv[1]
+        let vv = color1[2] - color2.hsv[2]
+        let dist = Math.sqrt(hh * hh + ss * ss + vv * vv)
+        if (closestDist === null || dist < closestDist) {
+          closestDist = dist
+          closestName = colorName
+        }
+      }
+
+      return [closestDist, closestName]
     },
     generate () {
       let maxFraglength = 0
@@ -217,8 +256,14 @@ export default {
     }
   },
   mounted () {
+    // Parse color list
+    for (let colorName in colorList) {
+      let color = colorList[colorName]
+      color['hsv'] = convert.rgb.hsv(color.rgb)
+    }
   }
 }
+
 </script>
 
 <style>
