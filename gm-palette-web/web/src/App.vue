@@ -146,9 +146,10 @@
 </template>
 
 <script>
-
-import colorList from '@/assets/colors.json'
+import nearestColor from 'nearest-color'
+import namedColors from 'color-name-list'
 import convert from 'color-convert'
+import latinize from 'latinize'
 
 export default {
   name: 'App',
@@ -168,7 +169,9 @@ export default {
 
       palette: [],
       prefix: 'PAL_',
-      generated: ''
+      generated: '',
+
+      findNearest: null
     }
   },
   computed: {
@@ -225,9 +228,9 @@ export default {
             let color = convert.rgb.hex(rgb)
             let hsv = convert.rgb.hsv(rgb)
 
-            let closestName = this.findClosest(hsv)
+            let closestName = this.findNearest('#' + color)
 
-            closestName = closestName.toUpperCase().replace(/_/g, '')
+            closestName = latinize(closestName.name).toUpperCase().replace(/[^a-zA-Z0-9]/g, '')
 
             if (closestName in usedNames) {
               let count = ++usedNames[closestName]
@@ -255,24 +258,6 @@ export default {
           this.setError(err)
           console.log(err)
         })
-    },
-    findClosest (color1) {
-      let closestName = null
-      let closestDist = null
-
-      for (let colorName in colorList) {
-        let color2 = colorList[colorName]
-        let hh = color1[0] - color2.hsv[0]
-        let ss = color1[1] - color2.hsv[1]
-        let vv = color1[2] - color2.hsv[2]
-        let dist = Math.sqrt(hh * hh + ss * ss + vv * vv)
-        if (closestDist === null || dist < closestDist) {
-          closestDist = dist
-          closestName = colorName
-        }
-      }
-
-      return closestName
     },
     generate () {
       let maxFraglength = 0
@@ -306,11 +291,8 @@ export default {
     }
   },
   mounted () {
-    // Parse color list
-    for (let colorName in colorList) {
-      let color = colorList[colorName]
-      color['hsv'] = convert.rgb.hsv(color.rgb)
-    }
+    let colors = namedColors.reduce((o, { name, hex }) => Object.assign(o, { [name]: hex }), {})
+    this.findNearest = nearestColor.from(colors)
   }
 }
 
