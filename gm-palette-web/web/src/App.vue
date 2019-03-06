@@ -75,7 +75,7 @@
               <v-card>
                 <v-card-text>
                   <p>
-                    <v-text-field box prepend-icon="ballot" name="prefix" label="Macro prefix" v-model="prefix"></v-text-field>
+                    <v-text-field solo prepend-icon="ballot" name="prefix" label="Macro prefix" v-model="prefix"></v-text-field>
                   </p>
                   <v-list dense>
                     <template v-for="(colorData, index) in palette">
