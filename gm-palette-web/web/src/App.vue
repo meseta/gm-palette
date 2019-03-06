@@ -124,7 +124,7 @@
         <v-card-text>
           <p>
             GMPalette is a tool for generating color macros<br />
-            Author: <a href="http://meseta.io">Meseta</a>
+            Author: <a href="https://meseta.dev">Meseta</a>
           </p>
           <p>
             Paste in hex codes such as those downloaded from Lospec.com
@@ -133,7 +133,7 @@
           </p>
           <p>
             Color names are automatically selected using closeness to colors
-            from <a href="https://en.wikipedia.org/wiki/Lists_of_colors">Wikipedia</a>
+            from <a href="https://www.npmjs.com/package/color-name-list#sources-">color-name-list</a>
           </p>
         </v-card-text>
         <v-card-actions>
